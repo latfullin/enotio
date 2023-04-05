@@ -1,0 +1,4 @@
+/logs
+package-lock.json
+/vendor/
+/node_modules

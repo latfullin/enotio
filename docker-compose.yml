@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: enotio-nginx
+    build:
+      context: ./docker/nginx/
+    ports:
+      - '7777:80'
+    links:
+      - php
+    environment:
+      TZ: Europe/Moscow
+    volumes:
+      - ./:/var/www/html
+      - ./logs/nginx:/usr/share/nginx/log/
+
+  php:
+    container_name: enotio-php
+    build:
+      context: ./docker/php/
+      args:
+        DOCKER_USER: '${DOCKER_USER:-Please set user}'
+        DOCKER_UID: '${DOCKER_UID:-Please set DOCKER_UID}'
+        DOCKER_GROUP: '${DOCKER_GROUP:-Please set DOCKER_GROUP}'
+        DOCKER_GID: '${DOCKER_GID:-Please set user}'
+    volumes:
+      - ./:/var/www/html
