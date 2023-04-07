@@ -1,28 +1,45 @@
 version: '3.8'
 
 services:
-  nginx:
-    container_name: enotio-nginx
-    build:
-      context: ./docker/nginx/
-    ports:
-      - '7777:80'
-    links:
-      - php
-    environment:
-      TZ: Europe/Moscow
-    volumes:
-      - ./:/var/www/html
-      - ./logs/nginx:/usr/share/nginx/log/
+    nginx:
+        container_name: enotio-nginx
+        build:
+            context: ./docker/nginx/
+        ports:
+            - '${DOCKER_NGINX_ROOT:-80}:80'
+        links:
+            - php
+        environment:
+            TZ: Europe/Moscow
+        volumes:
+            - ./:/var/www/html
+            - ./logs/nginx:/usr/share/nginx/log/
 
-  php:
-    container_name: enotio-php
-    build:
-      context: ./docker/php/
-      args:
-        DOCKER_USER: '${DOCKER_USER:-Please set user}'
-        DOCKER_UID: '${DOCKER_UID:-Please set DOCKER_UID}'
-        DOCKER_GROUP: '${DOCKER_GROUP:-Please set DOCKER_GROUP}'
-        DOCKER_GID: '${DOCKER_GID:-Please set user}'
-    volumes:
-      - ./:/var/www/html
+    php:
+        container_name: enotio-php
+        build:
+            context: ./docker/php/
+            args:
+                DOCKER_USER: '${DOCKER_USER:-Please set user}'
+                DOCKER_UID: '${DOCKER_UID:-Please set DOCKER_UID}'
+                DOCKER_GROUP: '${DOCKER_GROUP:-Please set DOCKER_GROUP}'
+                DOCKER_GID: '${DOCKER_GID:-Please set user}'
+        volumes:
+            - ./:/var/www/html
+        links:
+            - mysql
+
+    mysql:
+        container_name: enotio-mysql
+        image: mysql:8.0
+        ports:
+            - '${DOCKER_MYSQL_PORT:-3306}:3306'
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql/
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DOCKER_MYSQL_ROOT_PASSWORD:-password}'
+            MYSQL_DATABASE: '${DOCKER_MYSQL_DATABASE:-client-telegram}'
+            MYSQL_USER: '${DOCKER_MYSQL_USER:-user}'
+            MYSQL_PASSWORD: '${DOCKER_MYSQL_PASSWORD:-password}'
+            TZ: Europe/Moscow
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
