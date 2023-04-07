@@ -3,12 +3,19 @@ import axios from "axios"
 const $registration = document.querySelector('.form-registration')
 
 if ($registration) {
+  let passwordField = [];
   const sendForm = (e) => {
     e.preventDefault();
 
-    axios.post('/api/registration',
+    const result = axios.post('/api/registration',
       new FormData($registration)
-    ).then((e) => console.log(e.data))
+    ).then((e) => console.log(e))
+
+    if (result.status == 200) {
+      console.log(result.data)
+    } else {
+      console.log(result.data)
+    }
   }
 
   const checkLength = (e) => {
@@ -20,14 +27,23 @@ if ($registration) {
     }
   }
 
-  const $fieldName = $registration.querySelectorAll('input[name="login"]')
+  const $fieldName = $registration.querySelector('input[name="login"]')
 
   $fieldName.addEventListener('input', () => checkLength($fieldName))
 
   const $fieldPassword = $registration.querySelectorAll('input[type="password"]')
 
-  $fieldPassword.forEach((field) => {
+  const checkPassword = (field) => {
+    checkLength(field)
+    checkDoublePassword()
+  }
 
+  const checkDoublePassword = () => {
+  }
+
+  $fieldPassword.forEach((field) => {
+    passwordField.push(field)
+    field.addEventListener('input', () => checkPassword(field))
   })
 
   $registration.addEventListener('submit', sendForm)
