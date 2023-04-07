@@ -8,3 +8,4 @@ Route::get('/', [ViewController::class, 'authorization']);
 Route::get('/registration', [ViewController::class, 'registration']);
 
 Route::post('/api/registration', [AuthController::class, 'registration']);
+Route::post('/api/authorization', [AuthController::class, 'authorization']);

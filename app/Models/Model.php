@@ -7,6 +7,7 @@ class Model
   protected static ?Model $intance = null;
   protected ?\PDO $connect = null;
   protected ?string $table = null;
+  protected $prepare = null;
 
   public function __construct()
   {
@@ -28,6 +29,30 @@ class Model
 
   protected function __clone()
   {
+  }
+
+  protected function prepare($query): self
+  {
+    $this->prepare = $this->connect->prepare($query);
+
+    return $this;
+  }
+
+  protected function execute(array $execute)
+  {
+    $this->prepare->execute($execute);
+
+    return $this;
+  }
+
+  protected function fetch()
+  {
+    return $this->prepare->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  protected function fetchAll()
+  {
+    return $this->prepare->fetchAll(\PDO::FETCH_ASSOC);
   }
 
   protected function insert(array $values)
