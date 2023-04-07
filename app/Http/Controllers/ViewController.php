@@ -9,4 +9,9 @@ class ViewController
   {
     return view('authorization.html');
   }
+
+  public function registration()
+  {
+    return view('registration.html');
+  }
 }

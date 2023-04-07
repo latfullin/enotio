@@ -3,3 +3,6 @@ package-lock.json
 composer.lock
 /vendor/
 /node_modules
+/docker/mysql/data
+.env
+/public/mix-manifest.json
