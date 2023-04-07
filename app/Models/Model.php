@@ -8,12 +8,12 @@ class Model
   protected ?\PDO $connect = null;
   protected ?string $table = null;
 
-  protected function __construct()
+  public function __construct()
   {
     $dns = 'mysql:dbname=database;host=mysql';
     $user = 'user';
     $password = 'password';
-    $this->table = (new \ReflectionClass($this))->getShortName();
+    $this->table = strtolower((new \ReflectionClass($this))->getShortName());
     $this->connect = new \PDO($dns, $user, $password);
   }
 
@@ -28,5 +28,29 @@ class Model
 
   protected function __clone()
   {
+  }
+
+  protected function insert(array $values)
+  {
+    ['column' => $column, 'value' => $value] = $this->splitData($values);
+
+    $this->connect
+      ->query("INSERT INTO {$this->table} ({$column}) VALUES ({$value})")
+      ->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  private function splitData(array $array)
+  {
+    $result = ['column' => '', 'value' => ''];
+    $count = count($array) - 1;
+    $i = 0;
+
+    foreach ($array as $key => $item) {
+      $result['column'] .= $count === $i ? "`{$key}`" : "`{$key}`,";
+      $result['value'] .= $count === $i ? "'{$item}'" : "'{$item}',";
+      $i++;
+    }
+
+    return $result;
   }
 }
