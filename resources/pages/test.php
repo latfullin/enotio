@@ -12,7 +12,15 @@
 </head>
 
 <body>
-  <header></header>
+  <header class="pb-3">
+    <div class="container">
+
+      <form action="/api/logout" method="post">
+        <button class="btn btn-outline-primary" type="submit">Выйти</button>
+      </form>
+    </div>
+
+  </header>
 
   <main>
     <div class="container">

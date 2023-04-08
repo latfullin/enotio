@@ -10,7 +10,7 @@ class HttpKernel
   ];
 
   protected array $services = [
-    \App\Http\Middleware\Auth::class,
+    \App\Service\Session::class,
   ];
 
   public function getMiddleware($key)
