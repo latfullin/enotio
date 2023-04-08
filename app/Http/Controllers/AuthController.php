@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
+use App\Models\User;
+use App\Service\Session;
 
 class AuthController
 {
   public function registration($request)
   {
-    $users = new Users();
+    $users = new User();
 
     if (!$users->getUser($request['login'])) {
       $users->newUser($request['login'], $request['password']);
@@ -21,9 +22,10 @@ class AuthController
 
   public function authorization($request)
   {
-    $user = (new Users())->authorization($request['login'], $request['password']);
+    $user = (new User())->authorization($request['login'], $request['password']);
 
     if ($user) {
+      Session::set('auth', true);
       return response('Вы авторизовались');
     }
 

@@ -1,3 +1,5 @@
+import './auth.js';
+
 import axios from "axios"
 
 const $registration = document.querySelector('.form-registration')

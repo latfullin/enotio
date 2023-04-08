@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-class Users extends Model
+class User extends Model
 {
+  protected string $table = 'users';
+
+  protected array $columns = ['login', 'password', 'email', 'name'];
 
   public function getUser(string $login)
   {

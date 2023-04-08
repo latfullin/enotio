@@ -2,80 +2,96 @@
 
 namespace App\Models;
 
-class Model
+use App\Service\Db;
+
+abstract class Model
 {
-  protected static ?Model $intance = null;
-  protected ?\PDO $connect = null;
-  protected ?string $table = null;
-  protected $prepare = null;
+  protected string $table;
 
-  public function __construct()
-  {
-    $dns = 'mysql:dbname=database;host=mysql';
-    $user = 'user';
-    $password = 'password';
-    $this->table = strtolower((new \ReflectionClass($this))->getShortName());
-    $this->connect = new \PDO($dns, $user, $password);
-  }
+  protected array $columns = ['id', 'created_at', 'update_at'];
 
-  public static function getInstance()
+  protected $data;
+
+  protected array $collection = [];
+
+  protected string $query;
+
+  public function __construct(array $data = [])
   {
-    if (is_null(self::$intance)) {
-      self::$intance = new self();
+    $this->getModelName();
+
+    foreach ($this->columns as $column) {
+      if (isset($data[$column])) {
+        $this->__set($column, $data[$column]);
+      }
     }
-
-    return self::$intance;
   }
 
-  protected function __clone()
+  // public static function find($id)
+  public  function find(array $data)
   {
-  }
-
-  protected function prepare($query): self
-  {
-    $this->prepare = $this->connect->prepare($query);
+    $this->data = Db::getInstance()
+      ->prepare("SELECT * FROM {$this->table}  WHERE id = :id")
+      ->execute($data)
+      ->fetch();
 
     return $this;
   }
 
-  protected function execute(array $execute)
+  public function __get($name)
   {
-    $this->prepare->execute($execute);
+    return $this->collection[$name];
+  }
+
+  public function __set($name, $value)
+  {
+    $this->collection[$name] = $value;
+  }
+
+  public function get()
+  {
+    if ($this->data) {
+      return new static($this->data);
+    }
+
+    return false;
+  }
+
+  private function getModelName()
+  {
+    if (empty($this->table)) {
+      $this->table = strtolower((new \ReflectionClass($this))->getShortName());
+    }
+  }
+
+  protected function prepare(string $query): self
+  {
+    $this->query = $query;
 
     return $this;
   }
 
-  protected function fetch()
+  protected function execute(array $execute): self
   {
-    return $this->prepare->fetch(\PDO::FETCH_ASSOC);
+    $this->execute = $execute;
+
+    return $this;
   }
 
-  protected function fetchAll()
+  public function fetch()
   {
-    return $this->prepare->fetchAll(\PDO::FETCH_ASSOC);
+    $this->data = Db::getInstance()
+      ->prepare($this->query)
+      ->execute($this->execute)
+      ->fetch();
+
+    return $this->get();
   }
 
-  protected function insert(array $values)
+  public function insert(array $data): bool
   {
-    ['column' => $column, 'value' => $value] = $this->splitData($values);
+    Db::getInstance()->insert($data);
 
-    $this->connect
-      ->query("INSERT INTO {$this->table} ({$column}) VALUES ({$value})")
-      ->fetch(\PDO::FETCH_ASSOC);
-  }
-
-  private function splitData(array $array)
-  {
-    $result = ['column' => '', 'value' => ''];
-    $count = count($array) - 1;
-    $i = 0;
-
-    foreach ($array as $key => $item) {
-      $result['column'] .= $count === $i ? "`{$key}`" : "`{$key}`,";
-      $result['value'] .= $count === $i ? "'{$item}'" : "'{$item}',";
-      $i++;
-    }
-
-    return $result;
+    return true;
   }
 }
