@@ -6,3 +6,6 @@ composer.lock
 /docker/mysql/data
 .env
 /public/mix-manifest.json
+/public
+!/public/index.php
+!/public/favicon.*
