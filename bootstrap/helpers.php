@@ -1,8 +1,10 @@
 <?php
 $response = '';
 
-function view(string $page)
+function view(string $page, array $data = [])
 {
+  extract($data, EXTR_SKIP);
+
   include "../resources/pages/{$page}";
 }
 

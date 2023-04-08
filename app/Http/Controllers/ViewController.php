@@ -14,4 +14,9 @@ class ViewController
   {
     return view('registration.html');
   }
+
+  public function dashboard()
+  {
+    return view('test.php', ['items' => [1, 2, 3, 4, 5]]);
+  }
 }
