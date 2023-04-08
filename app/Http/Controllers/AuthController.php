@@ -31,4 +31,9 @@ class AuthController
 
     return response('Введен неверный логин или пароль');
   }
+
+  public function logout()
+  {
+    Session::destroy();
+  }
 }

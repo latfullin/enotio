@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\HttpKernel;
 use App\Service\Route;
 
 class Kernel
@@ -10,6 +11,7 @@ class Kernel
   protected static $responseStatus = 200;
   protected $request = null;
   protected $contoller = null;
+  protected ?HttpKernel $httpKernel = null;
 
   public function __construct()
   {
@@ -18,14 +20,22 @@ class Kernel
 
   public function handle()
   {
+    $this->initSeviceClass();
+    $this->callBaseService();
     $this->checkBodyRequest();
     $this->executeController();
+    $this->callMiddlewares($this->contoller);
     $this->callController($this->contoller);
   }
 
   protected function checkBodyRequest()
   {
     $this->request = $_POST;
+  }
+
+  protected function initSeviceClass()
+  {
+    $this->httpKernel = new HttpKernel();
   }
 
   protected function executeController()
@@ -37,10 +47,24 @@ class Kernel
     }
   }
 
-  private function callController(array $contoller)
+  public function callBaseService()
   {
-    $response = (new ($contoller['controller'][0]))->{$contoller['controller'][1]}($this->request);
+    foreach ($this->httpKernel->getServices() as $service) {
+      new $service();
+    }
+  }
+
+  private function callController(Route $contoller)
+  {
+    $response = (new ($contoller->controller[0]))->{$contoller->controller[1]}($this->request);
     $this->response($response);
+  }
+
+  public function callMiddlewares(Route $middlewares)
+  {
+    foreach ($middlewares->middlewares as $middleware) {
+      (new ($this->httpKernel->getMiddleware($middleware))())->handle();
+    }
   }
 
   private function error()
