@@ -18,7 +18,7 @@ class User extends Model
 
   public function newUser(string $login, string $password,)
   {
-    $this->insert(['login' => $login, 'password' => $password]);
+    $this->insert(['login' => $login, 'password' => $password], $this->table);
   }
 
   public function authorization(string $login, string $password)

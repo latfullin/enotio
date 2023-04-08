@@ -15,9 +15,12 @@
   <header></header>
 
   <main>
-    <? foreach ($items as $item) : ?>
-      <?= $item ?>
-    <? endforeach ?>
+    <div class="container">
+
+      <? foreach ($items as $item) : ?>
+        <?= $item ?>
+      <? endforeach ?>
+    </div>
 </body>
 
 </html>

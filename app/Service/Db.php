@@ -54,8 +54,9 @@ class Db
     return $this->prepare->fetchAll(\PDO::FETCH_ASSOC);
   }
 
-  public function insert(array $values)
+  public function insert(array $values, string $table)
   {
+    $this->table = $table;
     ['column' => $column, 'value' => $value] = $this->splitData($values);
 
     $this->connect

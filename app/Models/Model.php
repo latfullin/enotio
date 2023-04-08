@@ -90,7 +90,7 @@ abstract class Model
 
   public function insert(array $data): bool
   {
-    Db::getInstance()->insert($data);
+    Db::getInstance()->insert($data, $this->table);
 
     return true;
   }

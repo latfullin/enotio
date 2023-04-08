@@ -1,9 +1,8 @@
 <?php
 
-use App\Service\Session;
+use App\Service\ExchangeRatesService;
 
 require_once '../vendor/autoload.php';
-new Session();
 
 $app = require_once '../bootstrap/app.php';
 
