@@ -36,4 +36,11 @@ class Currency extends Model
       ->execute(['value' => $data->Value, 'num_code' => $data->NumCode])
       ->fetch();
   }
+
+  public function getAll()
+  {
+    return $this
+      ->prepare("SELECT * FROM {$this->table}")
+      ->fetchAll();
+  }
 }

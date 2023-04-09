@@ -49,7 +49,7 @@ class ExchangeRatesService
           'char_code' => $xml->CharCode,
           'nominal' => $xml->Nominal,
           'title' => $xml->Name,
-          'value' => $xml->Value
+          'value' =>  $xml->Value
         ]);
       } else {
         $this->currency->update($xml);

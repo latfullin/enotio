@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
+
 class ViewController
 {
 
@@ -17,6 +19,10 @@ class ViewController
 
   public function dashboard()
   {
-    return view('test.php', ['items' => [1, 2, 3, 4, 5]]);
+    $data = (new Currency())->getAll();
+
+    $currencies = array_map(fn ($e) => ['nominal' => $e->nominal, 'value' => ($e->value / $e->nominal), 'title' => $e->title], $data);
+
+    return view('dashboard.php', ['currencies' => $currencies]);
   }
 }

@@ -16,6 +16,8 @@ abstract class Model
 
   protected string $query;
 
+  protected array $execute = [];
+
   public function __construct(array $data = [])
   {
     $this->getModelName();
@@ -86,6 +88,24 @@ abstract class Model
       ->fetch();
 
     return $this->get();
+  }
+
+  public function fetchAll()
+  {
+    $result = Db::getInstance()
+      ->prepare($this->query)
+      ->execute($this->execute)
+      ->fetchAll();
+
+    $colletions = [];
+
+    foreach ($result as $item) {
+      $this->data = $item;
+
+      $colletions[] = $this->get();
+    }
+
+    return $colletions;
   }
 
   public function insert(array $data): bool
