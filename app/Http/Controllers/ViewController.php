@@ -9,12 +9,12 @@ class ViewController
 
   public function authorization()
   {
-    return view('authorization.html');
+    return view('authorization.php');
   }
 
   public function registration()
   {
-    return view('registration.html');
+    return view('registration.php');
   }
 
   public function dashboard()

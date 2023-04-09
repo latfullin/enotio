@@ -35,5 +35,6 @@ class AuthController
   public function logout()
   {
     Session::destroy();
+    return response('Ok');
   }
 }
