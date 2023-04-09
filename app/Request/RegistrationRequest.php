@@ -31,7 +31,7 @@ class RegistrationRequest
 
   protected function password()
   {
-    if (strlen($this->fields['password'] > 6)) {
+    if (strlen($this->fields['password']) > 11) {
       return $this->addError('password', 'Превыше длина');
     }
 

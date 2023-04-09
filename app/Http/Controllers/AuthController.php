@@ -23,7 +23,7 @@ class AuthController
 
     $user->newUser($request['login'], $request['password']);
 
-    return response('Вы успешно зарегистрировались');
+    return response(['success' => 'Вы успешно зарегистрировались']);
   }
 
   public function authorization($request)

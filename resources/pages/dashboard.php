@@ -17,7 +17,7 @@
             <label for="">
               Российский рубль
             </label>
-            <input type="number" class="form-control value" min="1" step="<?= $currency['value'] ?>" data-value="<?= $currency['value'] ?>" value="">
+            <input type="number" class="form-control value" min="<?= $currency['value'] ?>" step="<?= $currency['value'] ?>" data-value="<?= $currency['value'] ?>" value="">
           </div>
 
         </div>

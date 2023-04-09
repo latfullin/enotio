@@ -36,6 +36,7 @@ if ($registration) {
     errorPassword.innerHTML = ''
     errorPassword.style.display = 'none'
   }
+
   const hiddenErrorConfirmPassword = () => {
     errorConfrimPassword.innerHTML = ''
     errorConfrimPassword.style.display = 'none'
@@ -67,7 +68,6 @@ if ($registration) {
   $fieldPassword.addEventListener('input', () => checkPassword($fieldPassword))
   $fieldConfirmPassword.addEventListener('input', () => checkDoublePassword($fieldConfirmPassword))
 
-
   const viewError = (error) => {
     if (error.login) {
       showErrorLogin(error.login)
@@ -82,7 +82,6 @@ if ($registration) {
     }
   }
 
-
   const sendForm = async (e) => {
     e.preventDefault();
 
@@ -91,10 +90,11 @@ if ($registration) {
     )
 
     if (result.data?.success) {
-      window.location.href = '/autorization'
+      window.location.href = '/'
     } else {
       viewError(result.data.error)
     }
   }
+
   $registration.addEventListener('submit', sendForm)
 }

@@ -69,7 +69,7 @@ class Kernel
 
   private function error()
   {
-    view('404.html');
+    view('404.php');
   }
 
   public function response($response)
