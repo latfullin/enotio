@@ -3,21 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Request\RegistrationRequest;
 use App\Service\Session;
 
 class AuthController
 {
   public function registration($request)
   {
-    $users = new User();
+    $user = new User();
 
-    if (!$users->getUser($request['login'])) {
-      $users->newUser($request['login'], $request['password']);
+    if ($user->getUser($request['login'])) {
+      return response(['error' => ['login' => 'Логин занят']]);
+    }
+    $validate = new RegistrationRequest($request);
 
-      return response('Вы успешно зарегистрировались');
+    if (!$validate->validateFields()) {
+      return response($validate->getErrors());
     }
 
-    return response('Пользователь с данным логином сущестует', 404);
+    $user->newUser($request['login'], $request['password']);
+
+    return response('Вы успешно зарегистрировались');
   }
 
   public function authorization($request)
@@ -26,15 +32,16 @@ class AuthController
 
     if ($user) {
       Session::set('auth', true);
-      return response('Вы авторизовались');
+      return response(['success' => 'ok']);
     }
 
-    return response('Введен неверный логин или пароль');
+    return response(['error' => 'Введен неверный логин или пароль']);
   }
 
   public function logout()
   {
     Session::destroy();
+
     return response('Ok');
   }
 }

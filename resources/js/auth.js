@@ -2,18 +2,28 @@ import axios from "axios";
 
 const formAuth = document.querySelector('.form-auth')
 const logout = document.querySelector('.logout')
+let errorVisible = false
 
 if (formAuth) {
+  const error = formAuth.querySelector('.invalid-feedback')
+
   const authorization = async (e) => {
     e.preventDefault();
 
     const result = await axios.post('/api/authorization', new FormData(formAuth))
-    if (result.status === 200) {
+    if (result.data.success) {
       window.location.href = '/dashboard'
+    } else {
+      showError(result.data.error)
     }
   }
+  formAuth.addEventListener('submit', async (e) => await authorization(e))
 
-  formAuth.addEventListener('submit', authorization)
+  const showError = (msg) => {
+    errorVisible = true
+    error.innerHTML = msg
+    error.style.display = 'block'
+  }
 }
 
 if (logout) {

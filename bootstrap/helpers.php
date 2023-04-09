@@ -33,7 +33,10 @@ function auth()
 }
 
 
-function component($component)
+function component($component, $data = [])
 {
+  ob_start();
+
   include "../resources/components/{$component}.php";
+  return ob_get_clean();
 }
