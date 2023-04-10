@@ -19,7 +19,6 @@
             </label>
             <input type="number" class="form-control value" min="<?= $currency['value'] ?>" step="<?= $currency['value'] ?>" data-value="<?= $currency['value'] ?>" value="">
           </div>
-
         </div>
       </div>
     <? endforeach ?>

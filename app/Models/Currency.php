@@ -33,7 +33,7 @@ class Currency extends Model
   {
     return $this
       ->prepare("UPDATE {$this->table} SET value = :value WHERE num_code = :num_code")
-      ->execute(['value' => $data->Value, 'num_code' => $data->NumCode])
+      ->execute(['value' => str_replace(',', '.', $data->Value), 'num_code' => $data->NumCode])
       ->fetch();
   }
 

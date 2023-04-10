@@ -6,7 +6,8 @@ RUN apk add --no-cache \
         linux-headers \
         autoconf \
         build-base \
-        curl 
+        curl \
+        supervisor 
 
 # Install ext
 RUN docker-php-ext-install \
@@ -35,32 +36,19 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-# SET USER
-ARG DOCKER_USER
-ARG DOCKER_UID
-ARG DOCKER_GROUP
-ARG DOCKER_GID
-
-# Create system user
-RUN addgroup -g $DOCKER_GID $DOCKER_GROUP
-RUN adduser -G www-data -u $DOCKER_UID -D -h /home/$DOCKER_USER $DOCKER_USER
-
-# Set PHP user
-RUN echo "user=$DOCKER_USER" >> $PHP_FPM_INI_CONF_DIR/www_custom.conf
-RUN echo "group=$DOCKER_GROUP" >> $PHP_FPM_INI_CONF_DIR/www_custom.conf
-
 # Clear
 RUN docker-php-source delete \
     && rm -rf /tmp/* \
     && rm -rf /var/cache/apk/*
 
-USER $DOCKER_USER:$DOCKER_GROUP
+# Config Supervisor
+COPY ./supervisor /etc/supervisor
+RUN mkdir -p /var/log/supervisor
 
 WORKDIR /var/www/html/public
 
-
-CMD ["php-fpm"]
-
 # Set crontab
 COPY ./cron/crontab /etc/crontabs/cron
-RUN /etc/crontabs/cron
+
+# Start Supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

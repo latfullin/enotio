@@ -20,17 +20,26 @@ class Kernel
 
   public function handle()
   {
+    try {
+      $this->init();
+    } catch (\Exception $e) {
+      $this->error500();
+    }
+  }
+
+  protected function checkBodyRequest()
+  {
+    $this->request = $_POST;
+  }
+
+  public function init()
+  {
     $this->initSeviceClass();
     $this->callBaseService();
     $this->checkBodyRequest();
     $this->executeController();
     $this->callMiddlewares($this->contoller);
     $this->callController($this->contoller);
-  }
-
-  protected function checkBodyRequest()
-  {
-    $this->request = $_POST;
   }
 
   protected function initSeviceClass()
@@ -43,7 +52,7 @@ class Kernel
     try {
       $this->contoller = Route::getRoute($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
     } catch (\Exception $e) {
-      $this->error();
+      $this->error404();
     }
   }
 
@@ -67,9 +76,14 @@ class Kernel
     }
   }
 
-  private function error()
+  private function error404()
   {
     view('404.php');
+  }
+
+  public function error500()
+  {
+    view('500.php');
   }
 
   public function response($response)

@@ -1,1 +1,3 @@
-cd /var/www/html && php cron
+* */3 * * * php /var/www/html/cron.php >> /dev/null 2>&1
+
+

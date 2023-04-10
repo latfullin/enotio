@@ -57,6 +57,6 @@ class RegistrationRequest
   protected function addError(string $key, string $msg): void
   {
     $this->error = false;
-    $this->errors['errors'][$key] = $msg;
+    $this->errors['error'][$key] = $msg;
   }
 }
